@@ -3,6 +3,8 @@ This is the console executeable that makes use of the BullCow class.
 For game logic see the FBullCowApp class
 */
 
+# pragma once
+
 #include <iostream>
 #include <string>
 #include "FBullCowApp.h"
@@ -42,7 +44,18 @@ int main()
 // introduce the game with basic text
 void PrintIntro() {
 	std::cout << "\nWelcome one and all to the Bulls and Cows game!\n";
-	std::cout << "It's super fun, like so fun I can't even\n";
+	std::cout << "It's super fun, like so fun I can't even.\n";
+	std::cout << "#############################################################" << std::endl;
+	std::cout << "#                  _  _                                     #" << std::endl;
+	std::cout << "#                 ( `   )_                                  #" << std::endl;
+	std::cout << "#                (    )    `)                               #" << std::endl;
+	std::cout << "#              (_   (_ .  _) _)                             #" << std::endl;
+	std::cout << "#                                             _             #" << std::endl;
+	std::cout << "#                                            (  )           #" << std::endl;
+	std::cout << "#             _ .                         ( `  ) . )        #" << std::endl;
+	std::cout << "#           (  _ )_                      (_, _(  ,_)_)      #" << std::endl;
+	std::cout << "#         (_  _(_ ,)                                        #" << std::endl;
+	std::cout << "#############################################################" << std::endl;
 	std::cout << "Guess the " << BCApp.GetHiddenWordLen();
 	std::cout << " character isogram!\n\n";
 	return;
@@ -69,7 +82,6 @@ void PlayTheGame()
 		std::cout << "Bulls = " << BullCowCount.Bulls;
 		std::cout << "  Cows = " << BullCowCount.Cows << "\n\n";
 	}
-	// TODO summary of game
 	PrintGameSummary();
 	return;
 }
@@ -81,7 +93,8 @@ FText GetCorrectGuess() {
 	do {
 		// get a guess from player
 		int32 CurrentTry = BCApp.GetCurrentTry();
-		std::cout << "This is guess number " << CurrentTry << ". \n";
+		std::cout << "This is guess number " << CurrentTry << " of " << BCApp.GetMaxTries();
+		std::cout << ". \n";
 		std::cout << "Enter a word that's " << BCApp.GetHiddenWordLen(); 
 		std::cout << " characters long: ";
 		
@@ -90,19 +103,20 @@ FText GetCorrectGuess() {
 		Status = BCApp.CheckGuessIsCorrect(Guess);
 		switch (Status) {
 		case EGuessStatus::Wrong_Length:
-			std::cout << "Wrong length, enter a word with " << BCApp.GetHiddenWordLen() << " letters. \n";
+			std::cout << "Wrong length, enter a word with " << BCApp.GetHiddenWordLen() << " letters. \n\n";
 			break;
 		case EGuessStatus::Not_Isogram:
-			std::cout << "Enter a word that does not have repeating letters. \n";
+			std::cout << "Enter a word that does not have repeating letters. \n\n";
 			break;
 		case EGuessStatus::Not_Lowercase:
-			std::cout << "Please enter all lowercase letters \n";
+			std::cout << "Please enter all lowercase letters \n\n";
 			break;
 		default:
 			// assumes the user guess is correct
 			break;
+		
 		}
-		std::cout << std::endl;
+		
 	} while (Status != EGuessStatus::All_Good); // keep going until no errors
 	return Guess;
 }

@@ -49,7 +49,10 @@ private:
 	// initialisation is in constructor in FBullCowApp.cpp
 	// could do it here if didn't need to change values each game
 	int32 CurrentTry;
-	int32 MaxTries;
+	// int32 MaxTries; //deleted since MaxTries now changes depending on word length
 	FString HiddenWord;
 	bool bWonGame;
+
+	bool IsIsogram(FString) const;
+	bool IsLowercase(FString) const;
 };

@@ -1,25 +1,34 @@
+# pragma once
+
 #include "FBullCowApp.h"
+#include <map> // library map
+#define TMap std::map // instead of Using since less complex
 
 // this is where constructor is defined to do what you want it to
-FBullCowApp::FBullCowApp()
+FBullCowApp::FBullCowApp() //this is the default constructor
 {
 	// at runtime these will take over any initial values in the .h file
 	//CurrentTry = 1;
 	//MaxTries = 4;
-	// instead of above we call reset
-	Reset();
+	Reset(); // instead of above we call reset
 }
 
 int32 FBullCowApp::GetCurrentTry() const { return CurrentTry; }
 int32 FBullCowApp::GetHiddenWordLen() const { return HiddenWord.length(); }
-int32 FBullCowApp::GetMaxTries() const { return MaxTries; }
 bool FBullCowApp::IsGameWon() const{ return bWonGame; }
+
+int32 FBullCowApp::GetMaxTries() const { 
+	// return MaxTries;
+	TMap<int32, int32> WordLengthToMaxTries{ {3, 4}, {4, 5}, {5, 9}, {6, 12}, {7, 22} }
+}; // braces can initialize
+	return WordLengthToMaxTries[HiddenWord.length()];
+}
 
 void FBullCowApp::Reset()
 {
 	// making a constant expression MAX_TRIES makes it so 
 	// it's easier to change MaxTries even when app gets very complex
-	constexpr int32 MAX_TRIES = 4;
+	// constexpr int32 MAX_TRIES = 4; //deleted since max tries now dependent on HiddenWord length
 	MaxTries = MAX_TRIES;
 
 	const FString HIDDEN_WORD = "ughz";
@@ -32,11 +41,11 @@ void FBullCowApp::Reset()
 
 EGuessStatus FBullCowApp::CheckGuessIsCorrect(FString Guess) const
 {
-	if (false) // if input not isogram
+	if (!IsIsogram(Guess)) // if input not isogram
 	{
 		return EGuessStatus::Not_Isogram;
 	}
-	else if (false) // if guess not lowercase
+	else if (!IsLowercase(Guess)) // if guess not lowercase TODO write function if lowercase
 	{
 		return EGuessStatus::Not_Lowercase;
 	}
@@ -81,4 +90,36 @@ FBullCowCount FBullCowApp::SubmitValidGuess(FString Guess)
 		bWonGame = false;
 	}
 	return BullCowCount;
+}
+
+bool FBullCowApp::IsIsogram(FString Word) const
+{
+	// treat 0 and 1 letter words as isograms
+	if (Word.length() <= 1) { return true; }
+
+	// loop through each letter of word
+	TMap<char, bool> LetterSeen;
+	for (auto Letter : Word) // like for letter in word?
+	{
+		Letter = tolower(Letter); // makes it so you can deal with mixed cases
+		if (LetterSeen[Letter]) { // if letter is in map/dict
+			return false; // no isogram yet
+		} else {
+			LetterSeen[Letter] = true; // add letter to the map/dictionary
+		}		
+	}
+	return true;
+}
+
+bool FBullCowApp::IsLowercase(FString Word) const
+{
+	for (auto Letter : Word)
+	{
+		// if isn't lowercase then return false
+		if (!islower(Letter))
+		{
+			return false;
+		}
+	}
+	return true;
 }
